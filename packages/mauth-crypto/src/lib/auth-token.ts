@@ -44,8 +44,6 @@ export function ValidateToken(rawToken: string, publicKey: string): AuthToken | 
       Buffer.from(signature, 'base64url')
     )
 
-    console.log(isValid)
-
     if (!isValid)
       return undefined
 

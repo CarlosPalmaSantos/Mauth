@@ -51,7 +51,8 @@
       "plugin": "@nx/jest/plugin",
       "options": {
         "targetName": "test"
-      }
+      },
+      "exclude": ["mauth-api-e2e/**/*", "apps/mauth-api-e2e/**/*"]
     },
     {
       "plugin": "@nx/webpack/plugin",
