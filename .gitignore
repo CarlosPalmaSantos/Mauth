@@ -42,6 +42,8 @@ Thumbs.db
 .nx/workspace-data
 .claude/worktrees
 .claude/settings.local.json
-/.env
-/apps/mauth-api/certs
-/package-lock.json
+
+.env
+certs
+
+package-lock.json
