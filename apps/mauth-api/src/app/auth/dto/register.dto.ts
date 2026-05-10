@@ -4,9 +4,9 @@ export class RegisterDto {
   @ApiProperty({ example: 'john_doe' })
   username: string;
 
-  @ApiProperty({ example: 'password123', required: false })
+  @ApiProperty({ example: 'password123' })
   password?: string;
 
-  @ApiProperty({ example: 'john@example.com', required: false })
+  @ApiProperty({ example: 'john@example.com' })
   email?: string;
 }
