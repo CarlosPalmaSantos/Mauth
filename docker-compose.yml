@@ -1,22 +1,4 @@
 services:
-  api:
-    image: node:20
-    working_dir: /app
-    volumes:
-      - .:/app
-      - node_modules:/app/node_modules
-      - /app/.nx
-    command: bash -c "npm install && npx nx serve mauth-api"
-    depends_on:
-      db:
-        condition: service_healthy
-    ports:
-      - "3000:3000"
-    networks:
-        - mauth-net
-    environment:
-      - NX_DAEMON=false
-
   db:
     image: postgres
     volumes:
@@ -26,19 +8,12 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-    networks:
-        - mauth-net
+    ports:
+      - "5432:5432"
     environment:
       POSTGRES_DB: ${DB_DATABASE}
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
 
 volumes:
-  nx_directory:
   postgres_data:
-  node_modules:
-
-networks:
-  mauth-net:
-    driver: bridge
-
