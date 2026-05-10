@@ -18,9 +18,9 @@
     "@nx/eslint": "22.7.1",
     "@nx/eslint-plugin": "22.7.1",
     "@nx/jest": "22.7.1",
-    "@nx/js": "^22.7.1",
-    "@nx/nest": "^22.7.1",
-    "@nx/node": "^22.7.1",
+    "@nx/js": "22.7.1",
+    "@nx/nest": "22.7.1",
+    "@nx/node": "22.7.1",
     "@nx/web": "22.7.1",
     "@nx/webpack": "22.7.1",
     "@nx/workspace": "22.7.1",
@@ -46,6 +46,7 @@
     "typescript": "~5.9.2",
     "typescript-eslint": "^8.40.0",
     "verdaccio": "^6.3.2",
+    "webpack": "^5.106.2",
     "webpack-cli": "^5.1.4"
   },
   "dependencies": {
