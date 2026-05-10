@@ -1,34 +1,40 @@
 import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
-import User from './entities/user';
-import { AuthToken, SignToken } from '@mauth/crypto'
+import { User } from '../entities';
+import { AuthToken, hash, SignToken } from '@mauth/crypto'
 import * as fs from 'fs'
+import * as path from 'path'
 import { InjectRepository } from '@nestjs/typeorm';
+import { RegisterDto } from './dto/register.dto';
 @Injectable()
 export class AuthService {
   constructor(@InjectRepository(User) private userRepository: Repository<User>) { }
 
   // TODO: Agregar errores
-  public async RegisterUser(username: string) {
-    if (this.isUserRegistered(username))
+  public async RegisterUser(reg: RegisterDto) {
+    if (await this.isUserRegistered(reg.username))
       console.error('Ya existe perros')
 
     const user = this.userRepository.create({
-      username,
-      email: 'test'
+      username: reg.username,
+      email: reg.email,
+      password: hash(reg.password)
     })
 
     await this.userRepository.save(user)
 
-    return this.generateSignedToken(username)
+    return this.generateSignedToken(user.username)
   }
 
   private async isUserRegistered(username: string) {
-    return await this.userRepository.exists({
+    // TODO: Verificar el corrrecto funcionamiento
+    const res = await this.userRepository.exists({
       where: {
         username
       }
     })
+
+    return res
   }
 
   private generateSignedToken(username: string): string {
@@ -46,7 +52,8 @@ export class AuthService {
   }
 
   private getPrivateToken(): string {
-    const privateKeyPath = '../../certs' // TODO: Utilizar variables de entorno
+    const privateKeyPath = path.join( __dirname, '../../../certs/private.pem') // TODO: Utilizar variables de entorno
+
     // TODO: Verificar si la clave existe y si no soltar un error
     return fs.readFileSync(privateKeyPath, 'utf8')
   }
