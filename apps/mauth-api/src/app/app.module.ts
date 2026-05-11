@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { User } from './entities';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 const DB_USER = process.env.DB_USER
 const DB_PASSWORD = process.env.DB_PASSWORD
@@ -19,8 +19,10 @@ const DB_URL = process.env.DB_URL
     database: DB_DATABASE,
     synchronize: true,
     entities: [User]
-  }), AuthModule],
-  controllers: [AppController],
-  providers: [AppService],
+  }),
+  ServeStaticModule.forRoot({
+    rootPath: join(__dirname, '..', 'mauth-portal')
+  }),
+    AuthModule],
 })
 export class AppModule { }
