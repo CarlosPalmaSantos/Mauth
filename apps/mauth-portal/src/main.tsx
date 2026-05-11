@@ -1,6 +1,10 @@
 import { StrictMode } from 'react';
+import { BrowserRouter } from 'react-router-dom';
 import * as ReactDOM from 'react-dom/client';
 import App from './app/app';
+import './styles.css'
+import "@fontsource/montserrat-alternates/400.css";
+import "@fontsource/montserrat-alternates/700.css";
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,
@@ -8,6 +12,8 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <StrictMode>
-    <App />
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
   </StrictMode>,
 );
