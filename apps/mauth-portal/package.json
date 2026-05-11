@@ -1,0 +1,10 @@
+{
+  "name": "@mauth/portal",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "vite": "^8.0.12",
+    "@vitejs/plugin-react": "^6.0.1"
+  }
+}

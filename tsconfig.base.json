@@ -16,6 +16,6 @@
     "paths": {
       "@mauth/crypto": ["./packages/mauth-crypto/src/index.ts"]
     }
-  },
+},
   "exclude": ["node_modules", "tmp"]
 }

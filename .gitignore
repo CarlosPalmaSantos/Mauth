@@ -48,3 +48,6 @@ certs
 
 package-lock.json
 /package-lock.json
+
+vite.config.*.timestamp*
+vitest.config.*.timestamp*
