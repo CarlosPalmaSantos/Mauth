@@ -12,7 +12,7 @@ type InputProps = {
 export function Panel({ children }: { children: ReactNode }) {
   return <div className='
   flex flex-col
-  gap-12
+  gap-16
   bg-mantle
   p-12 rounded-4xl drop-shadow-[0_0_15px] drop-shadow-black/25
   text-center items-center

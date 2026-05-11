@@ -38,7 +38,13 @@ export function Register() {
               type='password' />
           </div>
         </div>
-        <Button onClick={() => { console.log('login') }}>Register</Button>
+        <div className="flex flex-col gap-8 items-center">
+          <Button onClick={() => { console.log('login') }}>Register</Button>
+          <div className="flex flex-col gap-2">
+            <span className="text-md text-text">Already have an account?</span>
+            <a href=" /login" className="text-md text-lavender font-bold hover:underline">Login</a>
+          </div>
+        </div>
       </Panel>
     </div>
   );
