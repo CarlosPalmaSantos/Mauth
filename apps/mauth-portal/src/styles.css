@@ -20,6 +20,10 @@
   --color-lavender: #b4befe;
 }
 
+:root {
+  background-color: var(--color-base);
+}
+
 body {
   font-family: "Montserrat Alternates", sans-serif;
 }

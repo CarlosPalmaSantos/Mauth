@@ -5,12 +5,15 @@ import About from './pages/About';
 
 export function App() {
   return (
-    <Routes>
-      <Route path='/login' element={<Login />} />
-      <Route path='/register' element={<Register />} />
-      <Route path='/about' element={<About />} />
-      <Route path='*' element={<Login />} />
-    </Routes>
+
+    <div className='bg-base flex items-center justify-center h-dvh'>
+      <Routes>
+        <Route path='/login' element={<Login />} />
+        <Route path='/register' element={<Register />} />
+        <Route path='/about' element={<About />} />
+        <Route path='*' element={<Login />} />
+      </Routes>
+    </div>
   );
 }
 

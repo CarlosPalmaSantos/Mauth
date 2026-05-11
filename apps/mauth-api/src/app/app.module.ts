@@ -21,7 +21,8 @@ const DB_URL = process.env.DB_URL
     entities: [User]
   }),
   ServeStaticModule.forRoot({
-    rootPath: join(__dirname, '..', 'mauth-portal')
+    rootPath: join(__dirname, 'mauth-portal'),
+    exclude: ['/api'], // No redirigir si la ruta empieza por /api
   }),
     AuthModule],
 })

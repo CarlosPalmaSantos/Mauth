@@ -6,19 +6,28 @@ type InputProps = {
   title?: string,
   type: HTMLInputTypeAttribute
   value: string,
-  onChange: (value: string) => void
+  onChange?: (value: string) => void,
+  onKeyDown?: () => void
 }
 
 export function Panel({ children }: { children: ReactNode }) {
   return <div className='
   flex flex-col
-  gap-16
-  bg-mantle
-  p-12 rounded-4xl drop-shadow-[0_0_15px] drop-shadow-black/25
-  text-center items-center
-  max-w-[70%]
+  h-full md:h-fit
+  w-full md:w-fit md:max-w-[65%]
+  justify-center
+  bg-base md:bg-mantle
+  md:rounded-4xl md:drop-shadow-[-1_0_15px] md:drop-shadow-black/25
+  p-4 md:p-8
   '>
-    {children}
+    <div className='
+  flex flex-col
+  gap-10 md:gap-16
+  md:p-12
+  text-center items-center
+  '>
+      {children}
+    </div>
   </div>
 }
 
@@ -33,7 +42,8 @@ export function Button({ children, onClick }: ButtonProps) {
       onClick={onClick}
       className="
         w-fit
-        px-10 py-6
+        px-10
+        py-5 md:py-6
         rounded-3xl
         text-xl font-bold
         bg-lavender hover:bg-lavender/70
@@ -47,16 +57,28 @@ export function Button({ children, onClick }: ButtonProps) {
   )
 }
 
-export function Input({ type, placeholder, title, value, onChange }: InputProps) {
+export function Input({ type, placeholder, title, value, onChange, onKeyDown }: InputProps) {
   return (
-    <div className="flex flex-col gap-2">
-      <span className='text-xl font-bold text-subtext-1 text-left ml-4'>{title}:</span>
+    <div className="flex flex-col gap-0.5">
+      <span className='text-md md:text-xl font-bold text-subtext-1 text-left ml-4'>{title}:</span>
       <input
         placeholder={placeholder}
         value={value}
-        onChange={ev => onChange(ev.target.value)}
+        onChange={ev => { if (onChange) onChange(ev.target.value) }}
+        onKeyDown={(ev) => {
+          if (ev.key !== 'Enter')
+            return
+
+          if (onKeyDown) {
+            onKeyDown()
+          }
+
+          ev.preventDefault()
+          ev.currentTarget.blur()
+        }}
         className={`
-        p-6
+        p-3 md:p-4
+        w-full
         bg-surface-0
         text-text text-center text-2xl
         placeholder-subtext-0/50
@@ -74,5 +96,5 @@ export function Input({ type, placeholder, title, value, onChange }: InputProps)
 }
 
 export function Title() {
-  return <h1 className='text-7xl font-bold text-text drop-shadow-[0_0_5px] drop-shadow-text/50 p-4'>MAUTH</h1>
+  return <h1 className='text-6xl font-bold text-text drop-shadow-[0_0_5px] drop-shadow-text/50 p-1 md:p-4'>MAUTH</h1>
 }
