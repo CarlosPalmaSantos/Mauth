@@ -18,11 +18,11 @@ export function Panel({ children }: { children: ReactNode }) {
   justify-center
   bg-base md:bg-mantle
   md:rounded-4xl md:drop-shadow-[-1_0_15px] md:drop-shadow-black/25
-  p-4 md:p-8
+  p-6 md:p-8
   '>
     <div className='
   flex flex-col
-  gap-8 xl:gap-10 2xl:gap-16
+  gap-18 md:gap-10 2xl:gap-16
   text-center items-center
   '>
       {children}
@@ -41,7 +41,7 @@ export function Button({ children, onClick }: ButtonProps) {
       onClick={onClick}
       className="
         w-fit
-        px-7 py-3
+        px-8 py-3
         2xl:px-10 2xl:py-5
         rounded-3xl
         text-md font-bold
@@ -59,7 +59,7 @@ export function Button({ children, onClick }: ButtonProps) {
 
 export function Input({ type, placeholder, title, value, onChange, onKeyDown }: InputProps) {
   return (
-    <div className="flex flex-col gap-0.5 xl:w-80 2xl:w-100">
+    <div className="flex flex-col gap-0.5 w-80 md:w-80 2xl:w-100 max-w-full">
       <span className='text-sm 2xl:text-lg font-bold text-subtext-1 text-left ml-4'>{title}:</span>
       <input
         placeholder={placeholder}
@@ -77,7 +77,7 @@ export function Input({ type, placeholder, title, value, onChange, onKeyDown }: 
           ev.currentTarget.blur()
         }}
         className={`
-        p-3 2xl:p-4
+        p-5 md:p-3 2xl:p-4
         w-full
         bg-surface-0
         text-text text-center
