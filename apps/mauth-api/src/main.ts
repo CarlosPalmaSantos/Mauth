@@ -12,7 +12,9 @@ async function bootstrap() {
 
   // TODO: Verificar las claves
 
+
   const app = await NestFactory.create(AppModule);
+  app.enableCors()
   const instance = app.getHttpAdapter().getInstance();
   instance.set('trust proxy', 1);
 

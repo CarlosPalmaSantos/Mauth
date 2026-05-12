@@ -1,14 +1,5 @@
-import { HTMLInputTypeAttribute, ReactNode } from "react";
-
-type InputProps = {
-  className?: string,
-  placeholder?: string,
-  title?: string,
-  type: HTMLInputTypeAttribute
-  value: string,
-  onChange?: (value: string) => void,
-  onKeyDown?: () => void
-}
+import { ReactNode } from "react"
+export * from './input'
 
 export function Panel({ children }: { children: ReactNode }) {
   return <div className='
@@ -22,7 +13,7 @@ export function Panel({ children }: { children: ReactNode }) {
   '>
     <div className='
   flex flex-col
-  gap-18 md:gap-10 2xl:gap-16
+  gap-16 md:gap-10 2xl:gap-12
   text-center items-center
   '>
       {children}
@@ -41,11 +32,12 @@ export function Button({ children, onClick }: ButtonProps) {
       onClick={onClick}
       className="
         w-fit
-        px-8 py-3
+        px-10 py-3
+        md:px-8
         2xl:px-10 2xl:py-5
         rounded-3xl
-        text-md font-bold
-        2xl:text-xl
+        font-bold
+        text-md xl:text-sm 2xl:text-xl
         bg-lavender hover:bg-lavender/70
         drop-shadow-lavender/20 drop-shadow-[0_0_10px]
         hover:cursor-pointer
@@ -57,44 +49,7 @@ export function Button({ children, onClick }: ButtonProps) {
   )
 }
 
-export function Input({ type, placeholder, title, value, onChange, onKeyDown }: InputProps) {
-  return (
-    <div className="flex flex-col gap-0.5 w-80 md:w-80 2xl:w-100 max-w-full">
-      <span className='text-sm 2xl:text-lg font-bold text-subtext-1 text-left ml-4'>{title}:</span>
-      <input
-        placeholder={placeholder}
-        value={value}
-        onChange={ev => { if (onChange) onChange(ev.target.value) }}
-        onKeyDown={(ev) => {
-          if (ev.key !== 'Enter')
-            return
 
-          if (onKeyDown) {
-            onKeyDown()
-          }
-
-          ev.preventDefault()
-          ev.currentTarget.blur()
-        }}
-        className={`
-        p-5 md:p-3 2xl:p-4
-        w-full
-        bg-surface-0
-        text-text text-center
-        text-md 2xl:text-xl
-        placeholder-subtext-0/50
-        rounded-3xl
-        font-bold        border-none
-        hover:bg-surface-0/70
-        focus:ring-2 focus:ring-lavender focus:outline-none focus:bg-surface-0/70
-        transition-all
-        drop-shadow-[0_0_10px] drop-shadow-surface-1/25
-        caret-lavender
-      `}
-        type={type} />
-    </div>
-  )
-}
 
 export function Title() {
   return <h1 className='

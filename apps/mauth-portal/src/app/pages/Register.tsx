@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Button, Input, Panel, Title } from "../components";
+import { Button, Check, Checkers, ErrorPanel, Input, Panel, Title } from "../components";
+import { InfoPanel } from "../components/info-panel";
 
 export function Register() {
   const [user, setUser] = useState('')
@@ -8,10 +9,16 @@ export function Register() {
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
 
+  const [err, setErr] = useState<string | undefined>('API IS NOT WORKING !!!')
+
+  async function handleRegister() {
+  }
+
   return (
     <Panel>
       <Title />
       <div className='flex flex-col gap-4 md:gap-8 items-center'>
+        <ErrorPanel error={err} />
         <div className='flex flex-col md:flex-row gap-4 md:gap-8 '>
           <Input
             title="Username"
@@ -38,13 +45,14 @@ export function Register() {
         </div>
       </div>
       <div className="flex flex-col gap-8 items-center">
-        <Button onClick={() => { console.log('login') }}>Register</Button>
-        <div className="flex flex-col gap-2">
-          <span className="text-tiny text-text">Already have an account?</span>
-          <a href=" /login" className="text-tiny text-lavender font-bold hover:underline">Login</a>
-        </div>
+        <Button onClick={handleRegister}>Register</Button>
+        <InfoPanel
+          text="Already have an account?"
+          linkText="Login"
+          linkRef="/login"
+        />
       </div>
-    </Panel>
+    </Panel >
   );
 }
 

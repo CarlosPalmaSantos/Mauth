@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { User } from '../entities';
 import { AuthToken, hash, SignToken } from '@mauth/crypto'
@@ -29,12 +29,19 @@ export class AuthService {
   }
 
   public async LoginUser(log: LoginDto) {
+    console.log(log)
     const user = await this.userRepository.findOne({
       where: {
         username: log.username,
         password: hash(log.password)
       }
     })
+
+    console.log(user)
+
+    if (!user) {
+      throw new ForbiddenException('Invalid user or password')
+    }
 
     return this.generateSignedToken(user.username)
   }
