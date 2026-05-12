@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 @theme {
+  --text-2xs: 0.625rem;
   --color-base: #1e1e2e;
   --color-crust: #11111b;
   --color-mantle: #181825;
@@ -23,6 +24,8 @@
 :root {
   background-color: var(--color-base);
 }
+
+
 
 body {
   font-family: "Montserrat Alternates", sans-serif;

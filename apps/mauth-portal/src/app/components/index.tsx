@@ -13,7 +13,7 @@ type InputProps = {
 export function Panel({ children }: { children: ReactNode }) {
   return <div className='
   flex flex-col
-  h-full md:h-fit
+  h-full md:h-fit md:max-h-[95%]
   w-full md:w-fit md:max-w-[65%]
   justify-center
   bg-base md:bg-mantle
@@ -22,8 +22,7 @@ export function Panel({ children }: { children: ReactNode }) {
   '>
     <div className='
   flex flex-col
-  gap-10 md:gap-16
-  md:p-12
+  gap-8 xl:gap-10 2xl:gap-16
   text-center items-center
   '>
       {children}
@@ -42,10 +41,11 @@ export function Button({ children, onClick }: ButtonProps) {
       onClick={onClick}
       className="
         w-fit
-        px-10
-        py-5 md:py-6
+        px-7 py-3
+        2xl:px-10 2xl:py-5
         rounded-3xl
-        text-xl font-bold
+        text-md font-bold
+        2xl:text-xl
         bg-lavender hover:bg-lavender/70
         drop-shadow-lavender/20 drop-shadow-[0_0_10px]
         hover:cursor-pointer
@@ -59,8 +59,8 @@ export function Button({ children, onClick }: ButtonProps) {
 
 export function Input({ type, placeholder, title, value, onChange, onKeyDown }: InputProps) {
   return (
-    <div className="flex flex-col gap-0.5">
-      <span className='text-md md:text-xl font-bold text-subtext-1 text-left ml-4'>{title}:</span>
+    <div className="flex flex-col gap-0.5 xl:w-80 2xl:w-100">
+      <span className='text-sm 2xl:text-lg font-bold text-subtext-1 text-left ml-4'>{title}:</span>
       <input
         placeholder={placeholder}
         value={value}
@@ -77,10 +77,11 @@ export function Input({ type, placeholder, title, value, onChange, onKeyDown }: 
           ev.currentTarget.blur()
         }}
         className={`
-        p-3 md:p-4
+        p-3 2xl:p-4
         w-full
         bg-surface-0
-        text-text text-center text-2xl
+        text-text text-center
+        text-md 2xl:text-xl
         placeholder-subtext-0/50
         rounded-3xl
         font-bold        border-none
@@ -96,5 +97,6 @@ export function Input({ type, placeholder, title, value, onChange, onKeyDown }: 
 }
 
 export function Title() {
-  return <h1 className='text-6xl font-bold text-text drop-shadow-[0_0_5px] drop-shadow-text/50 p-1 md:p-4'>MAUTH</h1>
+  return <h1 className='
+  text-5xl 2xl:text-6xl font-bold text-text drop-shadow-[0_0_5px] drop-shadow-text/50 p-1 md:p-4'>MAUTH</h1>
 }

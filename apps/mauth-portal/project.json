@@ -14,7 +14,7 @@
       "cache": true,
       "dependsOn": ["^build"],
       "inputs": ["production", "^production"],
-      "outputs": ["{workspaceRoot}/dist/apps/mauth-api/mauth-portal"]
+      "outputs": ["{workspaceRoot}/dist/mauth-portal"]
     },
     "serve": {
       "continuous": true,

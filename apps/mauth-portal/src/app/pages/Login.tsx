@@ -9,7 +9,7 @@ export function Login() {
   return (
     <Panel>
       <Title />
-      <div className='flex flex-col gap-8'>
+      <div className='flex flex-col gap-8 items-center'>
         <Input
           title="Username"
           value={user}
@@ -23,9 +23,9 @@ export function Login() {
       </div>
       <div className="flex flex-col gap-8 items-center">
         <Button onClick={() => { console.log('register') }}>Login</Button>
-        <div className="flex flex-col gap-2">
-          <span className="text-sm text-text">Have you already an account?</span>
-          <a href=" /register" className="text-sm text-lavender font-bold hover:underline">Sign up</a>
+        <div className="flex flex-col gap-1 xl:gap-2">
+          <span className="text-2xs 2xl:text-sm text-text">Have you already an account?</span>
+          <a href=" /register" className="text-2xs 2xl:text-sm text-lavender font-bold hover:underline">Sign up</a>
         </div>
       </div>
 

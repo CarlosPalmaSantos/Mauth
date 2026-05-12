@@ -26,7 +26,7 @@ export default defineConfig(() => ({
   //   plugins: () => [ nxViteTsPaths() ],
   // },
   build: {
-    outDir: '../../dist/apps/mauth-api/mauth-portal',
+    outDir: '../../dist/apps/mauth-portal',
     emptyOutDir: true,
     reportCompressedSize: true,
     commonjsOptions: {

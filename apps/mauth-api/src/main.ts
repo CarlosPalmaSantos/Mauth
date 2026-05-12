@@ -13,6 +13,8 @@ async function bootstrap() {
   // TODO: Verificar las claves
 
   const app = await NestFactory.create(AppModule);
+  const instance = app.getHttpAdapter().getInstance();
+  instance.set('trust proxy', 1);
 
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);

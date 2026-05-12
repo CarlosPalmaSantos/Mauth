@@ -3,17 +3,47 @@ services:
     image: postgres
     volumes:
       - postgres_data:/var/lib/postgresql
+    networks:
+        - api-db
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
       interval: 5s
       timeout: 5s
       retries: 5
-    ports:
-      - "5432:5432"
     environment:
       POSTGRES_DB: ${DB_DATABASE}
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
+
+  api:
+    image: node
+    working_dir: /app
+    command: >
+      sh -c "npm install && ./node_modules/.bin/nx reset && ./node_modules/.bin/nx run mauth-portal:build && ./node_modules/.bin/nx run mauth-api:serve:production --host=0.0.0.0"
+    volumes:
+      - /app/dist
+      - /app/node_modules
+      - /app/.nx
+      - .:/app
+    networks:
+        - nginx_proxy-net
+        - api-db
+    environment:
+      DB_URL: db
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+
+networks:
+  nginx_proxy-net:
+    external: true
+  api-db:
+    driver: bridge
 
 volumes:
   postgres_data:
