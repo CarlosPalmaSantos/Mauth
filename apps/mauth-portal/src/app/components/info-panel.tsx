@@ -1,6 +1,6 @@
 import { Button } from "."
 
-type InfoPanelProps = {
+export type InfoPanelProps = {
   linkRef: string,
   linkText: string,
   text: string,

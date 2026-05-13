@@ -31,7 +31,7 @@ export default defineConfig(() => ({
     reportCompressedSize: true,
     commonjsOptions: {
       transformMixedEsModules: true,
-    },
+    }
   },
   test: {
     name: 'mauth-portal',
@@ -44,5 +44,5 @@ export default defineConfig(() => ({
       reportsDirectory: '../../coverage/apps/mauth-portal',
       provider: 'v8' as const,
     },
-  },
+  }
 }));

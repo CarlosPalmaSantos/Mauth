@@ -30,9 +30,7 @@ services:
         - api-db
     environment:
       DB_URL: db
-      POSTGRES_DB: ${DB_DATABASE}
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      VITE_API_URL: "https://auth.magic.onara.top/api"
     depends_on:
       db:
         condition: service_healthy

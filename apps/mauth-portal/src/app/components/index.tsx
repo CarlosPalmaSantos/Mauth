@@ -13,7 +13,7 @@ export function Panel({ children }: { children: ReactNode }) {
   '>
     <div className='
   flex flex-col
-  gap-16 md:gap-10 2xl:gap-12
+  gap-8 md:gap-0 2xl:gap-4
   text-center items-center
   '>
       {children}

@@ -1,18 +1,23 @@
-import { HTMLInputTypeAttribute } from "react";
+import { HTMLInputTypeAttribute, useEffect, useState } from "react";
+import { Button } from ".";
+import { InfoPanel, InfoPanelProps } from "./info-panel";
+import { Checker } from "./checkers";
 
 type InputProps = {
+  key: string,
+  type: HTMLInputTypeAttribute,
+  value: string,
+
   className?: string,
   placeholder?: string,
   title?: string,
-  type: HTMLInputTypeAttribute
-  value: string,
   onChange?: (value: string) => void,
-  onKeyDown?: () => void,
-  error?: string
+  error?: string,
+  checkers?: Checker[]
 }
 
 
-export function Input({ type, placeholder, title, value, onChange, onKeyDown, error }: InputProps) {
+export function Input({ type, placeholder, title, value, onChange, error }: InputProps) {
   return (
     <div className="flex flex-col gap-3 w-80 xl:w-70 2xl:w-100 max-w-full">
       <div className="flex flex-col gap-0.5 w-full">
@@ -26,10 +31,6 @@ export function Input({ type, placeholder, title, value, onChange, onKeyDown, er
           onKeyDown={(ev) => {
             if (ev.key !== 'Enter')
               return
-
-            if (onKeyDown) {
-              onKeyDown()
-            }
 
             ev.preventDefault()
             ev.currentTarget.blur()
@@ -56,49 +57,6 @@ export function Input({ type, placeholder, title, value, onChange, onKeyDown, er
   )
 }
 
-type Checker = {
-  fun: (str: string) => boolean,
-  msg: string
-}
-
-type Callback = (msg: string) => void
-
-type CheckResult = {
-  success: (cb: Callback) => CheckResult,
-  error: (cb: Callback) => CheckResult,
-}
-
-export function Check(field: string, value: string, ...checkers: Checker[]): CheckResult {
-  let error: string | null = null
-
-  for (const checker of checkers) {
-    if (!checker.fun(value)) {
-      error = checker.msg
-      break
-    }
-  }
-
-  const res = {
-    success: (cb: Callback) => {
-      if (!error) cb(value)
-      return res
-    },
-    error: (cb: Callback) => {
-      if (error) cb(error ? error.replace('%f', field).replace('%v', value) : '')
-      return res
-    }
-  }
-
-  return res
-}
-
-export const Checkers = {
-  isEmpty: {
-    msg: '%f must not be empty',
-    fun: (str: string) => /./.test(str)
-  },
-} satisfies Record<string, Checker>
-
 export function ErrorPanel({ error }: { error?: string }) {
   return <div>
     {error && <div className="
@@ -108,4 +66,119 @@ export function ErrorPanel({ error }: { error?: string }) {
       {error}
     </div>}
   </div>
+}
+
+type FormProps = {
+  inputs: InputProps[],
+  onSubmit: (values: Record<string, string>) => Promise<void>,
+  info?: InfoPanelProps
+  grid?: boolean
+}
+
+export default function Form({ inputs, onSubmit, info, grid }: FormProps) {
+  const [items, setItems] = useState<Record<string, { val: string, err?: string }>>()
+  const [error, setError] = useState<string>()
+
+  useEffect(() => {
+    setItems(
+      Object.fromEntries(inputs.map(i => ([i.key, { val: i.value }]))))
+  }, [inputs])
+
+  return (
+    <div className='flex flex-col gap-10 items-center'>
+      {items && <>
+        <ErrorPanel error={error} />
+        <div className={`
+          flex flex-col
+          p-0 md:py-4 2xl:p-0
+          2xl:flex 2xl:flex-col
+          ${grid ? 'md:grid md: grid-cols-2' : ''}
+          gap-6 md:gap-4
+          items-center
+          `}>
+          {inputs.map(i => <Input
+            key={i.key}
+            type={i.type}
+            title={i.title}
+            placeholder={i.placeholder}
+            value={items[i.key].val}
+            error={items[i.key].err}
+            onChange={
+              val => setItems(prev => {
+                if (!prev) return prev
+                return {
+                  ...prev,
+                  [i.key]: {
+                    ...prev[i.key],
+                    val
+                  }
+                }
+              })
+            }
+          />)}
+        </div>
+        <div className="flex flex-col gap-6 items-center">
+          <Button onClick={async () => {
+            let hasErrors = false;
+            const newItems = { ...items };
+
+            for (const input of inputs) {
+              if (input.checkers) {
+                const err = input.checkers
+                  .filter(c => {
+                    let inp
+
+                    switch (c.type) {
+                      case 'value': inp = items[input.key].val
+                        break
+                      case 'input-key':
+                        inp = {
+                          value: items[input.key].val,
+                          items
+                        }
+                        break
+                    }
+
+                    console.log(`Checking ${JSON.stringify(c)}`)
+                    console.log(inp)
+
+                    return !c.fun(inp)
+                  })
+                  .map(c => c.msg.replace('%f', input.title || input.key).replace('%v', items[input.key].val))[0];
+
+                if (err) {
+                  hasErrors = true;
+                  newItems[input.key] = { ...newItems[input.key], err };
+                } else {
+                  newItems[input.key] = { ...newItems[input.key], err: undefined };
+                }
+              }
+            }
+
+            setItems(newItems);
+
+            if (!hasErrors) {
+              try {
+                const values = Object.fromEntries(
+                  Object.entries(items).map(([k, v]) => [k, v.val]));
+                await onSubmit(values);
+              } catch (e: unknown) {
+                console.error(`ERROR CAPTURADO: ${e}`);
+                if (e instanceof Error) {
+                  setError(e.message);
+                }
+              }
+            } else setError(undefined)
+
+          }}>Login</Button>
+          {info && <InfoPanel
+            text={info.text}
+            linkText={info.linkText}
+            linkRef={info.linkRef}
+          />}
+        </div>
+      </>}
+    </div >
+
+  )
 }

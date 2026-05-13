@@ -1,55 +1,62 @@
-import { useState } from "react";
-import { Button, Check, Checkers, ErrorPanel, Input, Panel, Title } from "../components";
-import { InfoPanel } from "../components/info-panel";
+import { text } from "stream/consumers";
+import { Panel, Title } from "../components";
+import { Checkers } from "../components/checkers";
+import Form from "../components/input";
+import { useApi } from "../providers/ApiContext";
 
 export function Register() {
-  const [user, setUser] = useState('')
-  const [email, setEmail] = useState('')
+  const api = useApi()
 
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
-
-  const [err, setErr] = useState<string | undefined>('API IS NOT WORKING !!!')
-
-  async function handleRegister() {
+  async function handleRegister(inputs: Record<string, string>) {
+    try {
+      // const res = await api.register({
+      //   username: inputs.username,
+      //   email: inputs.email,
+      //   password: inputs.password
+      // })
+    } catch (e) {
+      if (e instanceof Error)
+        throw e
+    }
   }
 
   return (
     <Panel>
       <Title />
       <div className='flex flex-col gap-4 md:gap-8 items-center'>
-        <ErrorPanel error={err} />
-        <div className='flex flex-col md:flex-row gap-4 md:gap-8 '>
-          <Input
-            title="Username"
-            value={user}
-            onChange={setUser}
-            type='text' />
-          <Input
-            title="Email"
-            value={email}
-            onChange={setEmail}
-            type='email' />
-        </div>
-        <div className='flex flex-col md:flex-row gap-4 md:gap-8'>
-          <Input
-            title="Password"
-            value={password}
-            onChange={setPassword}
-            type='password' />
-          <Input
-            title="Confirm password"
-            value={confirmPassword}
-            onChange={setConfirmPassword}
-            type='password' />
-        </div>
-      </div>
-      <div className="flex flex-col gap-8 items-center">
-        <Button onClick={handleRegister}>Register</Button>
-        <InfoPanel
-          text="Already have an account?"
-          linkText="Login"
-          linkRef="/login"
+        <Form
+          inputs={[{
+            title: 'Username',
+            key: 'username',
+            value: '',
+            type: 'text',
+            checkers: [Checkers.isEmpty]
+          }, {
+            title: 'Email',
+            key: 'email',
+            value: '',
+            type: 'text',
+            checkers: [Checkers.isEmpty]
+          }, {
+            title: 'Password',
+            key: 'password',
+            value: '',
+            type: 'password',
+            checkers: [Checkers.isEmpty]
+          }, {
+            title: 'Confirm password',
+            key: 'c_password',
+            value: '',
+            type: 'password',
+            checkers: [Checkers.isEqualsKey('password')]
+          }]}
+          onSubmit={handleRegister}
+          info={{
+            text: 'Already have an account?',
+            linkText: 'Login',
+            linkRef: '/login',
+          }}
+          grid
         />
       </div>
     </Panel >
