@@ -9,11 +9,11 @@ export function Register() {
 
   async function handleRegister(inputs: Record<string, string>) {
     try {
-      // const res = await api.register({
-      //   username: inputs.username,
-      //   email: inputs.email,
-      //   password: inputs.password
-      // })
+      const res = await api.register({
+        username: inputs.username,
+        email: inputs.email,
+        password: inputs.password
+      })
     } catch (e) {
       if (e instanceof Error)
         throw e
