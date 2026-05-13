@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 import { nxCopyAssetsPlugin } from '@nx/vite/plugins/nx-copy-assets.plugin';
-import path from 'path';
+import path, { resolve } from 'path';
 
 export default defineConfig(() => ({
   root: import.meta.dirname,
@@ -46,8 +46,10 @@ export default defineConfig(() => ({
       provider: 'v8' as const,
     },
   },
-  alias: {
-    '@nestjs/swagger': path.resolve(__dirname, 'dummy-swagger.ts')
+  resolve: {
+    alias: {
+      '@nestjs/swagger': path.resolve(__dirname, 'dummy-swagger.ts')
+    },
   },
   optimizeDeps: {
     exclude: ['@nestjs/swagger']
