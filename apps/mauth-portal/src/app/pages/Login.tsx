@@ -2,24 +2,25 @@ import { useState } from "react";
 import { Button, Check, Checkers, ErrorPanel, Input, Panel } from "../components";
 import { Title } from "../components";
 import { InfoPanel } from "../components/info-panel";
-import api from "../api";
 import { useNavigate } from "react-router-dom";
+import { useApi } from "../providers/ApiContext";
 
 export function Login() {
-  const [user, setUser] = useState('')
+  const [username, setUsername] = useState('')
   const [userError, setUserError] = useState<string | undefined>(undefined)
 
   const [password, setPassword] = useState('')
   const [passwordError, setPasswordError] = useState<string | undefined>(undefined)
 
-
   const navigate = useNavigate()
   const [err, setErr] = useState<string | undefined>(undefined)
+
+  const api = useApi()
 
 
   async function handleLogin() {
     // CHECKS
-    Check('Username', user, Checkers.isEmpty)
+    Check('Username', username, Checkers.isEmpty)
       .success(v => setUserError(undefined))
       .error(setUserError)
 
@@ -28,7 +29,7 @@ export function Login() {
       .error(setPasswordError)
 
     if (!userError && !passwordError)
-      api.login(user, password)
+      api.login({ username, password })
         .then(() => {
           console.log('login :D')
           setErr(undefined)
@@ -43,8 +44,8 @@ export function Login() {
         <ErrorPanel error={err} />
         <Input
           title="Username"
-          value={user}
-          onChange={setUser}
+          value={username}
+          onChange={setUsername}
           error={userError}
           type='text' />
         <Input
