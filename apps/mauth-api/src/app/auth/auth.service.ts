@@ -5,8 +5,8 @@ import { AuthToken, hash, SignToken } from '@mauth/crypto'
 import * as fs from 'fs'
 import * as path from 'path'
 import { InjectRepository } from '@nestjs/typeorm';
-import { RegisterDto } from './dto/register.dto';
-import { LoginDto } from './dto/login.dto';
+import { ERROR_CODES, LoginDto, RegisterDto } from '@mauth/mauth-lib'
+
 @Injectable()
 export class AuthService {
   constructor(@InjectRepository(User) private userRepository: Repository<User>) { }
@@ -40,12 +40,14 @@ export class AuthService {
     console.log(user)
 
     if (!user) {
-      throw new ForbiddenException('Invalid user or password')
+      throw new BadRequestException({
+        code: ERROR_CODES.AUTH.INVALID_CREDENTIALS,
+        message: 'Invalid user or password'
+      })
     }
 
     return this.generateSignedToken(user.username)
   }
-
   private async isUserRegistered(username: string) {
     // TODO: Verificar el corrrecto funcionamiento
     const res = await this.userRepository.exists({

@@ -1,0 +1,19 @@
+{
+  "name": "mauth-lib",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/mauth-lib/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/mauth-lib",
+        "main": "packages/mauth-lib/src/index.ts",
+        "tsConfig": "packages/mauth-lib/tsconfig.lib.json",
+        "assets": ["packages/mauth-lib/*.md"]
+      }
+    }
+  }
+}

@@ -14,8 +14,9 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "paths": {
-      "@mauth/crypto": ["./packages/mauth-crypto/src/index.ts"]
+      "@mauth/crypto": ["./packages/mauth-crypto/src/index.ts"],
+      "@mauth/mauth-lib": ["./packages/mauth-lib/src/index.ts"]
     }
-},
+  },
   "exclude": ["node_modules", "tmp"]
 }

@@ -1,4 +1,7 @@
+import createError from 'http-errors'
+
 const apiUrl = import.meta.env.VITE_API_URL
+
 
 async function login(username: string, password: string): Promise<string> {
   const res = await fetch(`${apiUrl}/auth/login`, {
@@ -18,7 +21,8 @@ async function login(username: string, password: string): Promise<string> {
     return await res.text()
   }
 
-  throw new Error()
+  const jsonErr = await res.json()
+  throw createError(res.status, jsonErr.code)
 }
 
 export default {

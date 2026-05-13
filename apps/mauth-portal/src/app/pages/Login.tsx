@@ -33,7 +33,7 @@ export function Login() {
           console.log('login :D')
           setErr(undefined)
         })
-        .catch(() => setErr('error at login'))
+        .catch((e: Error) => { setErr(e.message) })
   }
 
   return (
