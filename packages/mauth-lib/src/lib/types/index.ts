@@ -1,9 +1,16 @@
 export * from './dto/login.dto'
 export * from './dto/register.dto'
+export * from './dto/user.dto'
 
-export const ERROR_CODES = {
+export const ERRORS = {
   AUTH: {
-    INVALID_CREDENTIALS: 'AUTH_LOGIN_INVALID_CREDENTIALS'
+    LOGIN: {
+      INVALID_CREDENTIALS: 'AUTH_LOGIN_INVALID_CREDENTIALS',
+    },
+    VALIDATE: {
+      INVALID_TOKEN: 'AUTH_VALIDATE_INVALID_TOKEN',
+      INVALID_USER: 'AUTH_VALIDATE_INVALID_USER',
+    }
   }
 }
 

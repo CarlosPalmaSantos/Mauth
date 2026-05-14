@@ -5,7 +5,6 @@ import App from './app/app';
 import './styles.css'
 import "@fontsource/montserrat-alternates/400.css";
 import "@fontsource/montserrat-alternates/700.css";
-import { ApiProvider } from './app/providers/ApiContext';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,
@@ -13,10 +12,8 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <StrictMode>
-    <ApiProvider>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </ApiProvider>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
   </StrictMode>,
 );

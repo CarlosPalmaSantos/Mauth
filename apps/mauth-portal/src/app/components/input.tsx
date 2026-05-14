@@ -70,12 +70,13 @@ export function ErrorPanel({ error }: { error?: string }) {
 
 type FormProps = {
   inputs: InputProps[],
+  submitText: string,
   onSubmit: (values: Record<string, string>) => Promise<void>,
   info?: InfoPanelProps
   grid?: boolean
 }
 
-export default function Form({ inputs, onSubmit, info, grid }: FormProps) {
+export default function Form({ inputs, submitText, onSubmit, info, grid }: FormProps) {
   const [items, setItems] = useState<Record<string, { val: string, err?: string }>>()
   const [error, setError] = useState<string>()
 
@@ -170,7 +171,7 @@ export default function Form({ inputs, onSubmit, info, grid }: FormProps) {
               }
             } else setError(undefined)
 
-          }}>Login</Button>
+          }}>{submitText}</Button>
           {info && <InfoPanel
             text={info.text}
             linkText={info.linkText}

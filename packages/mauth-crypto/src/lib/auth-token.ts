@@ -51,6 +51,7 @@ export function ValidateToken(rawToken: string, publicKey: string): AuthToken | 
 
     if (Date.now() > token.expire) {
       console.error('token expire')
+      return undefined
     }
 
     return token;

@@ -2,7 +2,7 @@ services:
   db:
     image: postgres
     volumes:
-      - postgres_data:/var/lib/postgresql
+      - ~/home/mauth/postgre:/var/lib/postgresql
     networks:
         - api-db
     healthcheck:
@@ -43,5 +43,3 @@ networks:
   api-db:
     driver: bridge
 
-volumes:
-  postgres_data:

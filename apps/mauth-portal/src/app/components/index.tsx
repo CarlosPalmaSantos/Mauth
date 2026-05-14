@@ -1,5 +1,6 @@
 import { ReactNode } from "react"
 export * from './input'
+export * from './spinner'
 
 export function Panel({ children }: { children: ReactNode }) {
   return <div className='

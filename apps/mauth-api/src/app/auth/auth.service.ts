@@ -1,53 +1,86 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { User } from '../entities';
-import { AuthToken, hash, SignToken } from '@mauth/crypto'
+import { AuthToken, hash, SignToken, ValidateToken } from '@mauth/crypto'
 import * as fs from 'fs'
 import * as path from 'path'
 import { InjectRepository } from '@nestjs/typeorm';
-import { ERROR_CODES, LoginDto, RegisterDto } from '@mauth/mauth-lib'
+import { ERRORS, LoginDto, RegisterDto } from '@mauth/mauth-lib'
+import { UserDto } from '../../../../../packages/mauth-lib/src/lib/types/dto/user.dto';
 
 @Injectable()
 export class AuthService {
   constructor(@InjectRepository(User) private userRepository: Repository<User>) { }
 
   // TODO: Agregar errores
-  public async RegisterUser(reg: RegisterDto) {
+  public async RegisterUser(reg: RegisterDto, tokenExpire = 500000) {
     if (await this.isUserRegistered(reg.username)) {
       throw new BadRequestException('User already exist')
     }
 
     const user = this.userRepository.create({
-      username: reg.username,
+      username: reg.username.toLowerCase().trim(),
       email: reg.email,
       password: hash(reg.password)
     })
 
     await this.userRepository.save(user)
 
-    return this.generateSignedToken(user.username)
+    return this.generateSignedToken(user.username, tokenExpire)
   }
 
-  public async LoginUser(log: LoginDto) {
+  public async LoginUser(log: LoginDto, tokenExpire = 500000) {
     console.log(log)
     const user = await this.userRepository.findOne({
       where: {
-        username: log.username,
+        username: log.username.toLowerCase().trim(),
         password: hash(log.password)
       }
     })
 
-    console.log(user)
-
     if (!user) {
       throw new BadRequestException({
-        code: ERROR_CODES.AUTH.INVALID_CREDENTIALS,
+        code: ERRORS.AUTH.LOGIN.INVALID_CREDENTIALS,
         message: 'Invalid user or password'
       })
     }
 
-    return this.generateSignedToken(user.username)
+    return this.generateSignedToken(user.username, tokenExpire)
   }
+
+  public async ValidateToken(signedToken: string) {
+    const jwt = ValidateToken(signedToken, this.getPublicToken())
+
+    // TODO: Utilizar variables de entorno
+    if (!jwt || jwt.author !== 'MAUTH-API') {
+      throw new ForbiddenException({
+        code: ERRORS.AUTH.VALIDATE.INVALID_TOKEN
+      })
+    }
+
+    if (!this.isUserRegistered(jwt.userId)) {
+      throw new ForbiddenException({
+        code: ERRORS.AUTH.VALIDATE.INVALID_USER
+      })
+    }
+
+    const res = await this.userRepository.findOne({
+      where: {
+        username: jwt.userId
+      }
+    })
+
+    if (!res) throw new ForbiddenException({
+      code: ERRORS.AUTH.VALIDATE.INVALID_USER
+    })
+
+    return {
+      username: res.username,
+      email: res.email
+    } satisfies UserDto
+
+  }
+
   private async isUserRegistered(username: string) {
     // TODO: Verificar el corrrecto funcionamiento
     const res = await this.userRepository.exists({
@@ -59,10 +92,10 @@ export class AuthService {
     return res
   }
 
-  private generateSignedToken(username: string): string {
+  private generateSignedToken(username: string, tokenExpire = 500000): string {
     const token: AuthToken = {
       author: 'MAUTH-API', // TODO: Utilizar variables de entorno
-      expire: Date.now() + 50000, // TODO: Utilizar variables de entorno
+      expire: Date.now() + tokenExpire, // TODO: Utilizar variables de entorno
       userId: username,
     }
 
@@ -71,6 +104,13 @@ export class AuthService {
     return SignToken(token, privateToken)
 
     // TODO: Agregar posibilidad de comprobación
+  }
+
+  private getPublicToken(): string {
+    const privateKeyPath = path.join(__dirname, '../../../certs/public.pem') // TODO: Utilizar variables de entorno
+
+    // TODO: Verificar si la clave existe y si no soltar un error
+    return fs.readFileSync(privateKeyPath, 'utf8')
   }
 
   private getPrivateToken(): string {

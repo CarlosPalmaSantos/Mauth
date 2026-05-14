@@ -7,14 +7,21 @@ import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import cookieParser from 'cookie-parser'
 
 async function bootstrap() {
 
-  // TODO: Verificar las claves
-
+  // TODO: Verificar la existencia de las claves
 
   const app = await NestFactory.create(AppModule);
-  app.enableCors()
+  app.use(cookieParser())
+
+  console.log(`Portal: ${process.env.PORTAL}`)
+  app.enableCors({
+    origin: process.env.PORTAL,
+    credentials: true
+  })
+
   const instance = app.getHttpAdapter().getInstance();
   instance.set('trust proxy', 1);
 

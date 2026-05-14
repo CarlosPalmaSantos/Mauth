@@ -4,10 +4,18 @@ import { useNavigate } from "react-router-dom";
 import { useApi } from "../providers/ApiContext";
 import Form from "../components/input";
 import { Checkers } from "../components/checkers";
+import { useEffect } from "react";
 
 export function Login() {
   const navigate = useNavigate()
-  const api = useApi()
+  const { api, validate } = useApi()
+
+  useEffect(() => {
+    validate()
+      .then(() => navigate('/validate', { state: { redir: '/login' } })) // TODO: Cambiar a un dash
+      .catch(() => navigate('/login'))
+  }, [api])
+
 
 
   async function handleLogin(inputs: Record<string, string>) {
@@ -16,6 +24,8 @@ export function Login() {
         username: inputs.username,
         password: inputs.password
       })
+
+      navigate('/validate')
     } catch (e) {
       if (e instanceof Error)
         throw e
@@ -27,6 +37,13 @@ export function Login() {
       <Title />
       <div className='flex flex-col gap-8 items-center'>
         <Form
+          submitText="Login"
+          onSubmit={handleLogin}
+          info={{
+            text: "Don't have an account?",
+            linkText: 'Sign up',
+            linkRef: '/register',
+          }}
           inputs={[{
             title: 'Username',
             key: 'username',
@@ -40,12 +57,6 @@ export function Login() {
             type: 'password',
             checkers: [Checkers.isEmpty]
           }]}
-          onSubmit={handleLogin}
-          info={{
-            text: "Don't have an account?",
-            linkText: 'Sign up',
-            linkRef: '/register',
-          }}
         />
       </div>
     </Panel>

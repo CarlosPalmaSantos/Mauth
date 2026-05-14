@@ -1,19 +1,33 @@
-import { text } from "stream/consumers";
 import { Panel, Title } from "../components";
 import { Checkers } from "../components/checkers";
 import Form from "../components/input";
 import { useApi } from "../providers/ApiContext";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 export function Register() {
-  const api = useApi()
+  const { api, validate } = useApi()
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    validate()
+      .then(() => navigate('/validate', {
+        state: { redir: '/register' }
+      })).catch(() => navigate('/register'))
+  }, [api])
+
+
 
   async function handleRegister(inputs: Record<string, string>) {
     try {
-      const res = await api.register({
+      await api.register({
         username: inputs.username,
         email: inputs.email,
         password: inputs.password
       })
+
+      navigate('/dash')
+
     } catch (e) {
       if (e instanceof Error)
         throw e
@@ -25,6 +39,13 @@ export function Register() {
       <Title />
       <div className='flex flex-col gap-4 md:gap-8 items-center'>
         <Form
+          submitText="Register"
+          onSubmit={handleRegister}
+          info={{
+            text: 'Already have an account?',
+            linkText: 'Login',
+            linkRef: '/login',
+          }}
           inputs={[{
             title: 'Username',
             key: 'username',
@@ -50,12 +71,6 @@ export function Register() {
             type: 'password',
             checkers: [Checkers.isEqualsKey('password')]
           }]}
-          onSubmit={handleRegister}
-          info={{
-            text: 'Already have an account?',
-            linkText: 'Login',
-            linkRef: '/login',
-          }}
           grid
         />
       </div>
