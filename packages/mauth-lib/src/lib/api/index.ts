@@ -1,7 +1,13 @@
-import { LoginDto, RegisterDto } from "../types";
+import { LoginDto, MauthError, RegisterDto } from "../types";
 
 export class Api {
-  constructor(private uri: string) { }
+  constructor(private uri: string, public onRevokeToken: () => void) { }
+
+  async handleErrors(err: MauthError) {
+    if (err.revoked) this.onRevokeToken()
+
+    return new Error(err.code)
+  }
 
   async login(body: LoginDto) {
     const res = await fetch(`${this.uri}/auth/login`, {
@@ -17,8 +23,7 @@ export class Api {
       return await res.text()
     }
 
-    const jsonErr = await res.json()
-    throw new Error(jsonErr.code)
+    throw this.handleErrors(await res.json())
   }
 
   async register(body: RegisterDto) {
@@ -35,8 +40,8 @@ export class Api {
       return await res.text()
     }
 
-    const jsonErr = await res.json()
-    throw new Error(jsonErr.code)
+
+    throw this.handleErrors(await res.json())
   }
 
   async validate() {
@@ -52,8 +57,8 @@ export class Api {
       return await res.json()
     }
 
-    const jsonErr = await res.json()
-    throw new Error(jsonErr.code)
+
+    throw this.handleErrors(await res.json())
   }
 
   async logout() {
@@ -69,7 +74,6 @@ export class Api {
       return await res.text()
     }
 
-    const jsonErr = await res.json()
-    throw new Error(jsonErr.code)
+    throw this.handleErrors(await res.json())
   }
 }

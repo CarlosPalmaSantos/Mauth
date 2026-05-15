@@ -35,28 +35,15 @@ export class AuthController {
   @Post('login')
   @ApiBody({ type: LoginDto })
   async Login(@Body() body: LoginDto, @Res({ passthrough: true }) response: Response) {
-    try {
-      const res = await this.authService.LoginUser(body, 1_000_000);
+    const res = await this.authService.LoginUser(response, body, 1_000_000);
 
-      response.cookie('portal_st', res, {
-        httpOnly: true,
-        sameSite: 'lax',
-        path: '/'
-      })
+    response.cookie('portal_st', res, {
+      httpOnly: true,
+      sameSite: 'lax',
+      path: '/'
+    })
 
-      return 'ok'
-    }
-    catch (e: unknown) {
-
-      response.clearCookie('portal_st', {
-        httpOnly: true,
-        sameSite: 'lax'
-      })
-
-      if (e instanceof Error)
-        throw e
-
-    }
+    return 'ok'
   }
 
   @Get('logout')
@@ -81,7 +68,7 @@ export class AuthController {
     try {
       const token = req.cookies['portal_st']
 
-      const res = await this.authService.ValidateToken(token)
+      const res = await this.authService.ValidateToken(response, token)
 
       return res
 

@@ -5,12 +5,25 @@ import { AuthToken, hash, SignToken, ValidateToken } from '@mauth/crypto'
 import * as fs from 'fs'
 import * as path from 'path'
 import { InjectRepository } from '@nestjs/typeorm';
-import { ERRORS, LoginDto, RegisterDto } from '@mauth/mauth-lib'
-import { UserDto } from '../../../../../packages/mauth-lib/src/lib/types/dto/user.dto';
+import { ERRORS, LoginDto, MauthError, RegisterDto, UserDto } from '@mauth/mauth-lib'
+
+import { Response } from 'express';
 
 @Injectable()
 export class AuthService {
   constructor(@InjectRepository(User) private userRepository: Repository<User>) { }
+
+  public RevokeCookieException(response: Response, code: string) {
+    response.clearCookie('portal_st', {
+      httpOnly: true,
+      sameSite: 'lax'
+    })
+
+    return new ForbiddenException({
+      code,
+      revoked: true,
+    } satisfies MauthError)
+  }
 
   // TODO: Agregar errores
   public async RegisterUser(reg: RegisterDto, tokenExpire = 500000) {
@@ -29,7 +42,7 @@ export class AuthService {
     return this.generateSignedToken(user.username, tokenExpire)
   }
 
-  public async LoginUser(log: LoginDto, tokenExpire = 500000) {
+  public async LoginUser(res: Response, log: LoginDto, tokenExpire = 500000) {
     console.log(log)
     const user = await this.userRepository.findOne({
       where: {
@@ -39,16 +52,13 @@ export class AuthService {
     })
 
     if (!user) {
-      throw new BadRequestException({
-        code: ERRORS.AUTH.LOGIN.INVALID_CREDENTIALS,
-        message: 'Invalid user or password'
-      })
+      throw this.RevokeCookieException(res, ERRORS.AUTH.LOGIN.INVALID_CREDENTIALS)
     }
 
     return this.generateSignedToken(user.username, tokenExpire)
   }
 
-  public async ValidateToken(signedToken: string) {
+  public async ValidateToken(res: Response, signedToken: string) {
     const jwt = ValidateToken(signedToken, this.getPublicToken())
 
     // TODO: Utilizar variables de entorno
@@ -64,19 +74,17 @@ export class AuthService {
       })
     }
 
-    const res = await this.userRepository.findOne({
+    const user = await this.userRepository.findOne({
       where: {
         username: jwt.userId
       }
     })
 
-    if (!res) throw new ForbiddenException({
-      code: ERRORS.AUTH.VALIDATE.INVALID_USER
-    })
+    if (!user) throw this.RevokeCookieException(res, ERRORS.AUTH.LOGIN.INVALID_CREDENTIALS)
 
     return {
-      username: res.username,
-      email: res.email
+      username: user.username,
+      email: user.email
     } satisfies UserDto
 
   }

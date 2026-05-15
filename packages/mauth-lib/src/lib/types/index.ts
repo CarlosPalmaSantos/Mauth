@@ -14,3 +14,7 @@ export const ERRORS = {
   }
 }
 
+export type MauthError = {
+  code: string,
+  revoked?: boolean,
+}

@@ -4,9 +4,13 @@ import { ReactNode, useState, createContext, useContext, useEffect } from "react
 
 const ApiContext = createContext<{ api: Api, user: UserDto | undefined, setUser: (user: UserDto | undefined) => void } | undefined>(undefined)
 
-export function ApiProvider({ children }: { children: ReactNode }) {
-  const [api, setApi] = useState<Api>(new Api(import.meta.env.VITE_API_URL))
+export function ApiProvider({ children }: { children: ReactNode, }) {
+  const [api, setApi] = useState<Api>(new Api(import.meta.env.VITE_API_URL, onRevoke))
   const [user, setUser] = useState<UserDto>()
+
+  function onRevoke() {
+    setUser(undefined)
+  }
 
   return <ApiContext.Provider value={{
     api, user, setUser
@@ -23,6 +27,8 @@ export function useApi() {
   }
 
   async function validate() {
+    if (ctx?.user) return
+
     if (!ctx?.api) {
       ctx?.setUser(undefined)
       throw new Error('API_UNREACHABLE')
