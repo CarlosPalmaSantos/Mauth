@@ -140,9 +140,6 @@ export default function Form({ inputs, submitText, onSubmit, info, grid }: FormP
                         break
                     }
 
-                    console.log(`Checking ${JSON.stringify(c)}`)
-                    console.log(inp)
-
                     return !c.fun(inp)
                   })
                   .map(c => c.msg.replace('%f', input.title || input.key).replace('%v', items[input.key].val))[0];

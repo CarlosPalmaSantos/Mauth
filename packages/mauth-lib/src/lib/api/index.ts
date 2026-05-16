@@ -3,7 +3,7 @@ import { LoginDto, MauthError, RegisterDto } from "../types";
 export class Api {
   constructor(private uri: string, public onRevokeToken: () => void) { }
 
-  async handleErrors(err: MauthError) {
+  handleErrors(err: MauthError) {
     if (err.revoked) this.onRevokeToken()
 
     return new Error(err.code)
