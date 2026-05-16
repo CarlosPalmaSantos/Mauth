@@ -70,7 +70,9 @@ export class Api {
       },
     })
 
+
     if (res.ok) {
+      this.onRevokeToken()
       return await res.text()
     }
 
