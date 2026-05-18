@@ -59,7 +59,7 @@ export class AuthService {
   }
 
   public async ValidateToken(res: Response, signedToken: string) {
-    const jwt = ValidateToken(signedToken, this.getPublicToken())
+    const jwt = ValidateToken(signedToken, this.GetPublicToken())
 
     // TODO: Utilizar variables de entorno
     if (!jwt || jwt.author !== 'MAUTH-API') {
@@ -114,7 +114,7 @@ export class AuthService {
     // TODO: Agregar posibilidad de comprobación
   }
 
-  private getPublicToken(): string {
+  public GetPublicToken(): string {
     const privateKeyPath = path.join(__dirname, '../../../certs/public.pem') // TODO: Utilizar variables de entorno
 
     // TODO: Verificar si la clave existe y si no soltar un error

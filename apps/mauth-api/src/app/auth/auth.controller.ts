@@ -83,6 +83,10 @@ export class AuthController {
       if (e instanceof Error)
         throw e
     }
+  }
 
+  @Get('pub_key')
+  async PublicKey() {
+    return this.authService.GetPublicToken()
   }
 }
